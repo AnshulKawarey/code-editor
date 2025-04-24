@@ -20,22 +20,27 @@ export default function Home() {
   const [output, setOutput] = useState<string>("");
 
 
+  // Handle language and code updates
   useEffect(() => {
-    if(typeof window!=="undefined"){
-      localStorage.setItem(`code-${language}`, code);
-    }
-  }, [code, language]);
-  
-  useEffect(() => {
-    console.log("Language changed to:", language); // Debug
     if (typeof window !== "undefined") {
+      console.log("Language changed to:", language);
       const stored = localStorage.getItem(`code-${language}`);
       console.log("Language:", language, "Stored:", JSON.stringify(stored));
-      if (!stored || stored.trim() === "") {
-        setCode(languagePlaceholders[language] || "");
-      }
+      const newCode = stored && stored.trim() !== "" ? stored : languagePlaceholders[language] || "";
+      console.log("Setting code to:", JSON.stringify(newCode));
+      setCode(newCode);
+      // Save to localStorage after updating code
+      localStorage.setItem(`code-${language}`, newCode);
     }
   }, [language]);
+
+  // Save code changes to localStorage (excluding language changes)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("Saving code to localStorage:", JSON.stringify(code));
+      localStorage.setItem(`code-${language}`, code);
+    }
+  }, [code]);
 
   useEffect(() =>{
     if (typeof window !== "undefined") {
