@@ -1,5 +1,6 @@
 "use client";
 
+import ProblemStatement from "@/components/ProblemStatement";
 import { useEffect, useState } from "react"
 
 export default function Home() {
@@ -40,6 +41,7 @@ export default function Home() {
     console.log("Toggling theme from", theme); // Debug log
     setTheme(theme === "light" ? "dark" : "light");
   };
+
   return (
     <div className={theme === "dark" ? "dark" : "light"}>
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -50,6 +52,12 @@ export default function Home() {
         >
           {theme==="light" ? "Light" : "Dark"}
         </button>
+
+        <div className="flex flex-col md:flex-row h-screen p-4 gap-4">
+          <div className="md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 rounded-md overflow-auto">
+          <ProblemStatement />
+          </div>
+        </div>
       </main>
 
     </div>
