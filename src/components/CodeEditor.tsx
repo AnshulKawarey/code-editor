@@ -18,6 +18,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const languageCompartment = useRef(new Compartment());
+  //will need to track user edits now since the onChange will trim all the new line characters
 
 
   useEffect(() => {
