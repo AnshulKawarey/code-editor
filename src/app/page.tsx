@@ -3,16 +3,18 @@
 import CodeEditor from "@/components/CodeEditor";
 import LanguageSelector from "@/components/LanguageSelector";
 import ProblemStatement from "@/components/ProblemStatement";
+import { languagePlaceholders } from "@/utils/languageExtentions";
 import { useEffect, useState } from "react"
 
 export default function Home() {
   const [language, setLanguage] = useState<string>("python");
-  const [code, setCode] = useState<string>(()=>{
+  const [code, setCode] = useState<string>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(`code-${language}`) || "";
-      return stored.trim();
+      const stored = localStorage.getItem(`code-${language}`);
+      console.log("Initial code:", JSON.stringify(stored));
+      return stored ? stored.trim() : languagePlaceholders[language] || "";
     }
-    return "";
+    return languagePlaceholders[language] || "";
   });
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [output, setOutput] = useState<string>("");
@@ -23,6 +25,17 @@ export default function Home() {
       localStorage.setItem(`code-${language}`, code);
     }
   }, [code, language]);
+  
+  useEffect(() => {
+    console.log("Language changed to:", language); // Debug
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`code-${language}`);
+      console.log("Language:", language, "Stored:", JSON.stringify(stored));
+      if (!stored || stored.trim() === "") {
+        setCode(languagePlaceholders[language] || "");
+      }
+    }
+  }, [language]);
 
   useEffect(() =>{
     if (typeof window !== "undefined") {
@@ -34,6 +47,7 @@ export default function Home() {
       }
     }
   }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("theme", theme); //save theme to local storage
@@ -51,7 +65,10 @@ export default function Home() {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  const resetCode = () => setCode("");
+  const resetCode = () => {
+    setCode(languagePlaceholders[language] || ""); // Reset to placeholder
+  };
+
 
   return (
     <div className={theme === "dark" ? "dark" : "light"}>
