@@ -19,7 +19,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
   const viewRef = useRef<EditorView | null>(null);
   const languageCompartment = useRef(new Compartment());
   //will need to track user edits now since the onChange will trim all the new line characters
-
+  const isUserEditing = useRef(false);
 
   useEffect(() => {
     if (!editorRef.current) return;
@@ -46,15 +46,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
   }, []);
 
   useEffect(() => {
-    if (viewRef.current) {
+    if (viewRef.current && !isUserEditing.current) {  //useredits wont be trimmed now
       const currentValue = viewRef.current.state.doc.toString();
-      const trimmedValue = value.trim();
-      if (trimmedValue !== currentValue) {
+      if (value !== currentValue) {
         viewRef.current.dispatch({
-          changes: { from: 0, to: currentValue.length, insert: trimmedValue },
+          changes: { from: 0, to: currentValue.length, insert: value },
         });
       }
     }
+    isUserEditing.current = false;
   }, [value]);
 
   useEffect(() => {
