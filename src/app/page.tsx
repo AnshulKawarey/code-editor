@@ -19,7 +19,7 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [output, setOutput] = useState<string>("");
 
-
+  //ok lmao the issue was solved but i just forgot to clear my localstorage before running it again 
   // Handle language and code updates
   useEffect(() => {
     if (typeof window !== "undefined") {
